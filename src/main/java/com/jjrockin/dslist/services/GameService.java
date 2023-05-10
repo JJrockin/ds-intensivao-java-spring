@@ -3,13 +3,13 @@ package com.jjrockin.dslist.services;
 import com.jjrockin.dslist.dto.GameDTO;
 import com.jjrockin.dslist.dto.GameMinDTO;
 import com.jjrockin.dslist.entities.Game;
+import com.jjrockin.dslist.projections.GameMinProjection;
 import com.jjrockin.dslist.repositories.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service
 public class GameService {
@@ -26,6 +26,12 @@ public class GameService {
     @Transactional(readOnly = true)
     public List<GameMinDTO> findAll(){
         List<Game> result = gameRepository.findAll();
+        return result.stream().map(GameMinDTO::new).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByList(Long listId){
+        List<GameMinProjection> result = gameRepository.searchByList(listId);
         return result.stream().map(GameMinDTO::new).toList();
     }
 }
